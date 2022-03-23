@@ -2,9 +2,15 @@ import turtle
 import random
 import time
 
+
 PLAYER_SPEED = 20
 SPAWN_RATE = 500 ## higher = less frequent
+ENEMY_CAR_SPEED = 1
+
 score = 0
+
+
+
 
 wn = turtle.Screen()
 wn.setup(1000, 800)
@@ -17,6 +23,7 @@ enemy = "enemy.gif"
 wn.register_shape(car_picture)
 wn.register_shape(road_bg)
 wn.register_shape(enemy)
+
 
 
 ## ROAD
@@ -35,6 +42,7 @@ player_car.goto(player_car.xcor(), player_car.ycor() - 250)
 
 
 ## SCORE
+
 sketch = turtle.Turtle()
 sketch.speed(0)
 sketch.color("black")
@@ -81,7 +89,7 @@ while True:
 	wn.update()
 
 	for index, car in enumerate(enemy_cars):
-		car.sety(car.ycor() - 1)
+		car.sety(car.ycor() - ENEMY_CAR_SPEED)
 
 		if car.ycor() < -420:
 			car.goto(1000,1000)
@@ -89,7 +97,11 @@ while True:
 			enemy_cars.pop(index)
 
 			score += 1
-			SPAWN_RATE -= 2
+			if random.randint(1,2) == 1: SPAWN_RATE -= 50 
+			else: SPAWN_RATE += 35
+
+			ENEMY_CAR_SPEED += 0.05
+
 			sketch.clear()
 			sketch.write(f"Score: {score}", align="center", font=("Iosevka Medium", 24, "normal"))
 
@@ -97,7 +109,7 @@ while True:
 			print(f"score: {score}")
 			quit()
 
-	if count_to_place_another_car % 500 == 0:
+	if count_to_place_another_car % SPAWN_RATE == 0:
 		makeEnemyCar(random.randint(-170, 170))
 
 	if player_car.xcor() > 175 or player_car.xcor() < -175:
